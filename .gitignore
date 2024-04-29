@@ -1,0 +1,9 @@
+node_modules
+
+.idea
+
+.parcel-cache
+.firebase/**.cache
+
+dist
+

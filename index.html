@@ -1,0 +1,29 @@
+<html lang='en'>
+  <head>
+    <link href='./src/assets/styles/styles.css' rel='stylesheet'>
+    <title>Canvas shooter</title>
+    <meta charset='UTF-8' />
+  </head>
+  <body>
+    <div id='stats'>
+      <span>Score: <span id='scoreStatEl'>0</span></span>
+      <span>Elims: <span id='elimsStatEl'>0</span></span>
+      <span>Shots: <span id='shotsStatEl'>0</span></span>
+      <span>Deaths: <span id='deathsStatEl'>0</span></span>
+    </div>
+    <div id='resumeBtn'></div>
+    <div
+      class='abs-center'
+      id='gameOverPromptEl'
+    >
+      <button id='restartBtn'>
+        Restart
+      </button>
+    </div>
+    <canvas></canvas>
+    <div style="display:none;">
+      <img id="weapon" src="./src/assets/img/gun-1.png"/>
+    </div>
+    <script src='./src/ts/index.ts' type='module'></script>
+  </body>
+</html>
