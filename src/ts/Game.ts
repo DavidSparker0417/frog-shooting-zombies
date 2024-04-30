@@ -130,11 +130,10 @@ export default class Game extends Component {
       canvasHeight: this.canvas.height,
       canvasWidth: this.canvas.width,
     })
-    
+
     state.shootingIntervalId = window.setInterval(() => {
-      if (state.isShooting)
-      {
-        const origin:Coords = {x: state.player.x, y: state.player.y}
+      if (state.isShooting) {
+        const origin: Coords = { x: state.player.x, y: state.player.y }
         this.shootProjectile(origin, state.weaponCoord)
       }
     }, 150)
@@ -144,12 +143,16 @@ export default class Game extends Component {
     this.projectiles = []
     this.enemies = []
     this.gameStatus = 'up'
+    if (state.player)
+      state.player.life = 6
     this.updatePersistentGameStatus()
+    this.drawHealth()
   }
 
   public initializeCanvas = () => {
     this.canvas.width = innerWidth
     this.canvas.height = innerHeight
+    this.drawHealth()
   }
 
   public handleWindowResize = () => {
@@ -195,8 +198,9 @@ export default class Game extends Component {
     })
 
     this.projectiles.push(new MovingCircle(x, y, 4, 'white', velocity))
-
-    // update the projectile stat on new projectile creation
+    
+    const audio = new Audio('https://silver-thirsty-damselfly-699.mypinata.cloud/ipfs/QmVBRuGCjSxkTSY1R4tKf11cE64AZkj1mBHdebkYLhakn6')
+    audio.play()
     updateProjectileCount()
   }
 
@@ -220,6 +224,25 @@ export default class Game extends Component {
     }
   }
 
+  public drawHealth = () => {
+    if (state.player) {
+      const health = document.getElementById('health-div')?.children
+      const lifeArray = [
+        ["./src/assets/img/life-empty.png", "./src/assets/img/life-empty.png", "./src/assets/img/life-empty.png"],
+        ["./src/assets/img/life-half.png", "./src/assets/img/life-empty.png", "./src/assets/img/life-empty.png"],
+        ["./src/assets/img/life-full.png", "./src/assets/img/life-empty.png", "./src/assets/img/life-empty.png"],
+        ["./src/assets/img/life-full.png", "./src/assets/img/life-half.png", "./src/assets/img/life-empty.png"],
+        ["./src/assets/img/life-full.png", "./src/assets/img/life-full.png", "./src/assets/img/life-empty.png"],
+        ["./src/assets/img/life-full.png", "./src/assets/img/life-full.png", "./src/assets/img/life-half.png"],
+        ["./src/assets/img/life-full.png", "./src/assets/img/life-full.png", "./src/assets/img/life-full.png"],
+      ]
+      const life = state.player.life
+      health[0].src = lifeArray[life][0];
+      health[1].src = lifeArray[life][1];
+      health[2].src = lifeArray[life][2];
+    }
+  }
+
   public animate = (): void => {
     let player = state.player!
     listen(state, 'player', () => {
@@ -233,7 +256,7 @@ export default class Game extends Component {
     this.animationId = requestAnimationFrame(this.animate)
     this.context.fillStyle = 'rgba(0, 0, 0, 0.5)'
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height * 2)
-    player.update(this.context, this.canvas)
+    player.update(this.context, this.canvas, this.enemies)
     this.frames += 1
 
     // handle PowerUp
@@ -296,9 +319,20 @@ export default class Game extends Component {
     this.enemies.forEach((enemy, i) => {
       enemy.update(this.context, { x: player.x, y: player.y })
 
-      // Game over
-      if (isColliding(player, enemy)) {
-        this.gameOver()
+      // Under attacking
+      if (isColliding(player, enemy, enemy.radius/2)) {
+        if (!state.player)
+          return
+        enemy.setAttacking(() => {
+          if (!state.player) return
+          state.player.life -= 1
+          this.drawHealth()
+          if (state.player.life === 0) {
+            this.gameOver()
+          }
+        })
+      } else {
+        enemy.clearAttacking()
       }
 
       this.projectiles.forEach((projectile, projectileIdx) => {
@@ -306,32 +340,35 @@ export default class Game extends Component {
         if (isColliding(projectile, enemy)) {
           // decrease enemy health
           const updatedEnemyHealth = enemy.health - player.damage
+          if (updatedEnemyHealth > 0) {
+            enemy.health = updatedEnemyHealth
+            // this.enemies.splice(
+            //   i,
+            //   1,
+            //   new Enemy({
+            //     ...enemy,
+            //     health: updatedEnemyHealth,
+            //   })
+            // )
+          } else {
+            // update the stats
+            this.updateScoreFromEnemyRadius(enemy.radius)
+            updateEliminationCount()
 
-          setTimeout(() => {
-            if (updatedEnemyHealth > 0) {
-              this.enemies.splice(
-                i,
-                1,
-                new Enemy({
-                  ...enemy,
-                  health: updatedEnemyHealth,
-                })
-              )
-            } else {
-              // update the stats
-              this.updateScoreFromEnemyRadius(enemy.radius)
-              updateEliminationCount()
+            // update player attack damage on score milestones
+            player.damage = this.checkForAndGetUpgradeAttack()
 
-              // update player attack damage on score milestones
-              player.damage = this.checkForAndGetUpgradeAttack()
+            // Particle effects
+            const audio = new Audio('https://silver-thirsty-damselfly-699.mypinata.cloud/ipfs/Qmc9X2znctBbSK7T7HgxRx3JjdD2inxmmiw1NfWE1ChmVP')
+            audio.play()
+            this.particleEffects(projectile, enemy)
+            enemy.clearAttacking()
+            this.enemies.splice(i, 1)
+          }
+          this.projectiles.splice(projectileIdx, 1)
+          // setTimeout(() => {
 
-              // Particle effects
-              this.particleEffects(projectile, enemy)
-
-              this.enemies.splice(i, 1)
-            }
-            this.projectiles.splice(projectileIdx, 1)
-          }, 0)
+          // }, 0)
         }
       })
     })
@@ -350,6 +387,8 @@ export default class Game extends Component {
   private gameOver = () => {
     updateDeathCount()
     this.stop()
+    const audio = new Audio("https://silver-thirsty-damselfly-699.mypinata.cloud/ipfs/QmNh3C9vycUxNHpYSTpAKvsVnxAgN2xDsASDDBrRhagrto");
+    audio.play()
     clearInterval(state.intervalId)
     clearInterval(state.shootingIntervalId)
 
@@ -359,6 +398,9 @@ export default class Game extends Component {
 
     this.gameStatus = 'down'
     this.updatePersistentGameStatus()
+    this.enemies.forEach((enemy) => {
+      enemy.clearAttacking()
+    })
   }
 
   private updateScoreFromEnemyRadius = (enemyRadius: number): void => {

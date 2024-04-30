@@ -3,6 +3,8 @@ import HUD from './HUD'
 import { butcher, listen } from 'butcherjs'
 import Player from './entities/Player'
 import { Coords } from './types'
+import { isColliding } from './utils/utils'
+import { Point } from './types'
 
 type State = {
   stats: {
@@ -60,14 +62,14 @@ export const state = butcher({
     return
   }
 
-  canvasEl.addEventListener('click', event => {
-    const { clientX, clientY } = event
-    const { x, y } = player
+  // canvasEl.addEventListener('click', event => {
+  //   const { clientX, clientY } = event
+  //   const { x, y } = player
 
-    if (Game.getGameStatus() === 'up') {
-      game.shootProjectile({ x, y }, { x: clientX, y: clientY })
-    }
-  })
+  //   if (Game.getGameStatus() === 'up') {
+  //     game.shootProjectile({ x, y }, { x: clientX, y: clientY })
+  //   }
+  // })
 
   addEventListener('mousedown', event => {
     state.isShooting = true
@@ -93,11 +95,11 @@ export const state = butcher({
   })
 
   addEventListener('keydown', event => {
-    const velocity = 5;
+    var velocity = 4;
     switch (event.code) {
       case 'KeyD':
       case 'ArrowRight':
-        player.velocity.x = velocity
+        player.velocity.x = velocity;
         break
       case 'KeyA':
       case 'ArrowLeft':

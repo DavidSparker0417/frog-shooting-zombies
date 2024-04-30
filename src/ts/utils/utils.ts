@@ -27,9 +27,11 @@ export const getVelocity = ({
 }
 
 export const getDistance = (p1: Point, p2: Point): number => {
-  return Math.hypot(p1.x - p2.x, p1.y - p2.y)
+  const distance = Math.hypot(p1.x - p2.x, p1.y - p2.y)
+  return distance
 }
 
-export const isColliding = (p1: Point, p2: Point): boolean => {
-  return getDistance(p1, p2) - p1.radius - p2.radius < 1
+export const isColliding = (p1: Point, p2: Point, threshold:number = 1): boolean => {
+  const ret:boolean = getDistance(p1, p2) - p1.radius - p2.radius < threshold ? true : false
+  return ret
 }

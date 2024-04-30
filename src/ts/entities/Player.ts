@@ -1,5 +1,7 @@
 import { Circle, MovingCircle } from './Circle'
-import { Coords, Dimensions, Velocity } from '../types'
+import { Coords, Dimensions, Point, Velocity } from '../types'
+import { Enemy } from './Enemy'
+import { isColliding } from '../utils/utils'
 
 export type PowerUps = 'machineGun'
 
@@ -9,6 +11,7 @@ export default class Player extends Circle {
   health: number
   powerUp: PowerUps | null
   angle: number
+  life: number
   constructor({
     x,
     y,
@@ -39,16 +42,13 @@ export default class Player extends Circle {
     this.velocity = velocity
     this.powerUp = null
     this.angle = 0
+    this.life = 7
   }
 
   draw = (context: CanvasRenderingContext2D) => {
 
     const gunWidth = 50
     const gunHeight = 30
-
-    // const gunImage = document.getElementById('weapon')
-    // console.log(gunImage)
-    // context.drawImage(gunImage, this.x, this.y);
 
     const gunImage = new Image();
     gunImage.src = 'https://silver-thirsty-damselfly-699.mypinata.cloud/ipfs/Qmcgpi75o5ZdDL5JFjd4qn7i6xKZM9Sx1Ugc2Eh29ttTYf'
@@ -66,10 +66,24 @@ export default class Player extends Circle {
 
   update = (
     context: CanvasRenderingContext2D,
-    { width, height }: Dimensions
+    { width, height }: Dimensions,
+    enemies: Array<Enemy>
   ) => {
     this.draw(context)
 
+    const expectedPos: Point = {
+      x: this.x + this.velocity.x,
+      y: this.y + this.velocity.y,
+      radius: this.radius
+    }
+    enemies?.forEach((enemy) => {
+      if (isColliding(expectedPos, enemy)) {
+        console.log(`[DAVID] Colliding occured when player moving.`)
+        this.velocity.x = 0;
+        this.velocity.y = 0;
+        return
+      }
+    })
     // make sure the player doesn't go out of bounds
     if (
       this.x + this.radius + this.velocity.x <= width &&
