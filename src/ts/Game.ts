@@ -228,13 +228,13 @@ export default class Game extends Component {
     if (state.player) {
       const health = document.getElementById('health-div')?.children
       const lifeArray = [
-        ["./src/assets/img/life-empty.png", "./src/assets/img/life-empty.png", "./src/assets/img/life-empty.png"],
-        ["./src/assets/img/life-half.png", "./src/assets/img/life-empty.png", "./src/assets/img/life-empty.png"],
-        ["./src/assets/img/life-full.png", "./src/assets/img/life-empty.png", "./src/assets/img/life-empty.png"],
-        ["./src/assets/img/life-full.png", "./src/assets/img/life-half.png", "./src/assets/img/life-empty.png"],
-        ["./src/assets/img/life-full.png", "./src/assets/img/life-full.png", "./src/assets/img/life-empty.png"],
-        ["./src/assets/img/life-full.png", "./src/assets/img/life-full.png", "./src/assets/img/life-half.png"],
-        ["./src/assets/img/life-full.png", "./src/assets/img/life-full.png", "./src/assets/img/life-full.png"],
+        ["https://silver-thirsty-damselfly-699.mypinata.cloud/ipfs/QmVaAmghkcwqTy4WT5MqvkULsTvda2HkK8FhC7eWoKi65M", "https://silver-thirsty-damselfly-699.mypinata.cloud/ipfs/QmVaAmghkcwqTy4WT5MqvkULsTvda2HkK8FhC7eWoKi65M", "https://silver-thirsty-damselfly-699.mypinata.cloud/ipfs/QmVaAmghkcwqTy4WT5MqvkULsTvda2HkK8FhC7eWoKi65M"],
+        ["https://silver-thirsty-damselfly-699.mypinata.cloud/ipfs/QmeJjzEU8dShs2iRH5BqHnDhsaFMcuhGpkXESrG4Lv9foE", "https://silver-thirsty-damselfly-699.mypinata.cloud/ipfs/QmVaAmghkcwqTy4WT5MqvkULsTvda2HkK8FhC7eWoKi65M", "https://silver-thirsty-damselfly-699.mypinata.cloud/ipfs/QmVaAmghkcwqTy4WT5MqvkULsTvda2HkK8FhC7eWoKi65M"],
+        ["https://silver-thirsty-damselfly-699.mypinata.cloud/ipfs/QmNjNo5jdabFbv3aS4WxLxXF2K6rFnrSBTXLTFJm6LUtCy", "https://silver-thirsty-damselfly-699.mypinata.cloud/ipfs/QmVaAmghkcwqTy4WT5MqvkULsTvda2HkK8FhC7eWoKi65M", "https://silver-thirsty-damselfly-699.mypinata.cloud/ipfs/QmVaAmghkcwqTy4WT5MqvkULsTvda2HkK8FhC7eWoKi65M"],
+        ["https://silver-thirsty-damselfly-699.mypinata.cloud/ipfs/QmNjNo5jdabFbv3aS4WxLxXF2K6rFnrSBTXLTFJm6LUtCy", "https://silver-thirsty-damselfly-699.mypinata.cloud/ipfs/QmeJjzEU8dShs2iRH5BqHnDhsaFMcuhGpkXESrG4Lv9foE", "https://silver-thirsty-damselfly-699.mypinata.cloud/ipfs/QmVaAmghkcwqTy4WT5MqvkULsTvda2HkK8FhC7eWoKi65M"],
+        ["https://silver-thirsty-damselfly-699.mypinata.cloud/ipfs/QmNjNo5jdabFbv3aS4WxLxXF2K6rFnrSBTXLTFJm6LUtCy", "https://silver-thirsty-damselfly-699.mypinata.cloud/ipfs/QmNjNo5jdabFbv3aS4WxLxXF2K6rFnrSBTXLTFJm6LUtCy", "https://silver-thirsty-damselfly-699.mypinata.cloud/ipfs/QmVaAmghkcwqTy4WT5MqvkULsTvda2HkK8FhC7eWoKi65M"],
+        ["https://silver-thirsty-damselfly-699.mypinata.cloud/ipfs/QmNjNo5jdabFbv3aS4WxLxXF2K6rFnrSBTXLTFJm6LUtCy", "https://silver-thirsty-damselfly-699.mypinata.cloud/ipfs/QmNjNo5jdabFbv3aS4WxLxXF2K6rFnrSBTXLTFJm6LUtCy", "https://silver-thirsty-damselfly-699.mypinata.cloud/ipfs/QmeJjzEU8dShs2iRH5BqHnDhsaFMcuhGpkXESrG4Lv9foE"],
+        ["https://silver-thirsty-damselfly-699.mypinata.cloud/ipfs/QmNjNo5jdabFbv3aS4WxLxXF2K6rFnrSBTXLTFJm6LUtCy", "https://silver-thirsty-damselfly-699.mypinata.cloud/ipfs/QmNjNo5jdabFbv3aS4WxLxXF2K6rFnrSBTXLTFJm6LUtCy", "https://silver-thirsty-damselfly-699.mypinata.cloud/ipfs/QmNjNo5jdabFbv3aS4WxLxXF2K6rFnrSBTXLTFJm6LUtCy"],
       ]
       const life = state.player.life
       health[0].src = lifeArray[life][0];
